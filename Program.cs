@@ -17,7 +17,7 @@ namespace StromNaZnaku2
             Action action = Action.Stay;
 
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "txt files (*.txt)|*.txt";
+            openFile.Filter = ".png files (*.png)|*.png";
 
             GUIPerson people = new(highestPerson, openFile);
             GUIList list = new(highestPerson, openFile);
@@ -505,11 +505,11 @@ namespace StromNaZnaku2
             Console.Write("".PadRight(Console.BufferWidth - 11 - (_person.Name.Length + _person.Surname.Length) - 2 - 6));
 
 
-            Console.SetCursorPosition(15, 5);
-            Console.Write(_person.Sales.ToString().PadRight(Console.BufferWidth - 15));
+            Console.SetCursorPosition(22, 5);
+            Console.Write(_person.Sales.ToString("C").PadRight(Console.BufferWidth - 22));
 
             Console.SetCursorPosition(22, 6);
-            Console.Write(Finder.FindNetworkSales(_person).ToString().PadRight(Console.BufferWidth - 22));
+            Console.Write(Finder.FindNetworkSales(_person).ToString("C").PadRight(Console.BufferWidth - 22));
 
             int subordinatesStartingPosition = 8;
             if (_boss != null)
@@ -749,12 +749,16 @@ namespace StromNaZnaku2
 
             for (int i = 0; i < ids.Length; i++)
                 _people[i] = Finder.FindSalesman(ids[i]);
+
+            _personIndex = 0;
+            _cursorPosition = ButtonsList.Menu;
+            _menuPosition = MenuList.Load;
         }
 
         public void WritePeople()
         {
             Console.SetCursorPosition(0, 0);
-            Console.WriteLine("Načíst | Přejít na seznam".PadRight(Console.BufferWidth));
+            Console.WriteLine("Načíst | Přejít na strom".PadRight(Console.BufferWidth));
 
             Console.SetCursorPosition(0, 2);
             Console.WriteLine(_openFile.SafeFileName.PadRight(Console.BufferWidth));
@@ -783,6 +787,8 @@ namespace StromNaZnaku2
             {
 
                 case ConsoleKey.UpArrow:
+                    if (_people.Length == 0)
+                        break;
                     if (_cursorPosition == ButtonsList.People && _personIndex == 0)
                         _cursorPosition = ButtonsList.Menu;
                     else if (_personIndex > 0)
@@ -790,6 +796,8 @@ namespace StromNaZnaku2
                     break;
 
                 case ConsoleKey.DownArrow:
+                    if (_people.Length == 0)
+                        break;
                     if (_cursorPosition == ButtonsList.Menu)
                         _cursorPosition = ButtonsList.People;
                     else if (_personIndex < _people.Length - 1)
@@ -859,16 +867,16 @@ namespace StromNaZnaku2
                             Console.BackgroundColor = ConsoleColor.DarkYellow;
                             Console.Write("Načíst");
                             Console.BackgroundColor = ConsoleColor.Black;
-                            Console.Write(" | Přejít na seznam".PadRight(Console.BufferWidth - 6));
+                            Console.Write(" | Přejít na strom".PadRight(Console.BufferWidth - 6));
                             break;
 
                         case MenuList.Switch:
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Načíst | ");
                             Console.BackgroundColor = ConsoleColor.DarkYellow;
-                            Console.Write("Přejít na seznam");
+                            Console.Write("Přejít na strom");
                             Console.BackgroundColor = ConsoleColor.Black;
-                            Console.Write("".PadRight(Console.BufferWidth - 25));
+                            Console.Write("".PadRight(Console.BufferWidth - 24));
                             break;
 
                         default:
